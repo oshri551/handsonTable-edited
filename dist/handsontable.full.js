@@ -9943,6 +9943,7 @@ function offset(elem) {
       left: box.left + (window.pageXOffset || docElem.scrollLeft) - (docElem.clientLeft || 0)
     };
   }
+  if(typeof elem !== 'undefined') {
   offsetLeft = elem.offsetLeft;
   offsetTop = elem.offsetTop;
   lastElem = elem;
@@ -9962,6 +9963,7 @@ function offset(elem) {
     left: offsetLeft,
     top: offsetTop
   };
+  }
 }
 function getWindowScrollTop() {
   var res = window.scrollY;
@@ -13066,12 +13068,15 @@ var $Comments = Comments;
     this.editor.hide();
   },
   refreshEditorPosition: function() {
+      
     var force = arguments[0] !== (void 0) ? arguments[0] : false;
     if (!force && (!this.range.from || !this.editor.isVisible())) {
       return;
     }
     var TD = this.hot.view.wt.wtTable.getCell(this.range.from);
+      //console.log(TD)
     var cellOffset = offset(TD);
+      if(typeof cellOffset !== 'undefined') { //check for undefined
     var lastColWidth = this.hot.getColWidth(this.range.from.col);
     var cellTopOffset = cellOffset.top;
     var cellLeftOffset = cellOffset.left;
@@ -13097,8 +13102,13 @@ var $Comments = Comments;
     if (x <= holderPos.left || x > holderPos.right || y <= holderPos.top || y > holderPos.bottom) {
       this.hide();
     } else {
+      // comment position bug
+      //x += window.pageXOffset;   
+      //this.editor.setPosition(x, y);
       this.editor.setPosition(x, y);
-    }
+    } 
+   } //end of undefined check
+      Comments.refreshEditorPosition
   },
   onMouseDown: function(event) {
     this.mouseDown = true;
